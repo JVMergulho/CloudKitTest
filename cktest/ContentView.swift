@@ -24,9 +24,12 @@ struct ContentView: View {
                 .font(.body)
                 .foregroundColor(.black)
             
+            // botões de ação
             HStack{
                 Button(action: {
-                    cloudDB.createRecord(text: textValue)
+                    Task {
+                        await cloudDB.createRecord(text: textValue)
+                    }
                 }, label: {
                     Text("Salvar")
                         .padding()
@@ -56,9 +59,16 @@ struct ContentView: View {
             }
             .padding(.horizontal)
             
+            // lista de mensagens
             List{
                 ForEach(cloudDB.records, id: \.self){ record in
-                    Text(record["text"] as? String ?? "No Text")
+                    HStack{
+                        Text(record["text"] as? String ?? "No Text")
+                        
+                        Spacer()
+                        
+                        Text(record["enterCode"] as? String ?? "No Code")
+                    }
                 }
                 .onDelete(perform: deleteRecords(at:))
             }
