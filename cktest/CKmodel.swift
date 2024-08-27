@@ -47,11 +47,20 @@ class CKmodel: ObservableObject{
             // Atualiza a lista de registros na thread principal
             await MainActor.run {
                 self.records = fetchedRecords
+                print(records)
             }
             
         } catch {
             print("Erro ao buscar registros: \(error.localizedDescription)")
         }
 
+    }
+    
+    func deleteRecord(itemToDelete: CKRecord){
+        self.publicDB.delete(withRecordID: itemToDelete.recordID){ (deletedRecordID, error) in
+            if error != nil{
+                print(error.debugDescription)
+            }
+        }
     }
 }
